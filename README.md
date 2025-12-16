@@ -252,19 +252,6 @@ As escolhas de tecnologia e arquitetura do frontend serão baseadas em:
 
 ---
 
-## 🔄 Arquitetura de Camadas (Backend)
-
-**Fluxo típico de uma requisição:**
-1. Cliente envia `POST /estoques` com Bearer token
-2. **Authenticate Decorator** valida JWT
-3. **Route Handler** extrai userId e autorização
-4. **Service** executa lógica de negócio (via repository)
-5. **Repository** abstrai Prisma (fácil de testar/mockar)
-6. **Prisma** persiste em SQLite
-7. **Response** retorna com status e dados
-
----
-
 ## 💡 Decisões de Arquitetura
 
 ### Por que Fastify?
