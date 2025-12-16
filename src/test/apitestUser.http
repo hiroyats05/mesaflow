@@ -1,0 +1,29 @@
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name": "Hiroshi Yatabe",
+    "email": "teste4@gmail.com",
+    "password": "teste",
+    "phone": "1234567890"
+}
+
+###
+
+GET http://localhost:3000/users
+
+###
+
+GET http://localhost:3000/users/7
+
+###
+
+PUT http://localhost:3000/users/7
+Content-Type: application/json
+
+{
+    "name": "Samuel Hiroshi Pires Yatabe"
+} 
+
+###
+DELETE http://localhost:3000/users/6
