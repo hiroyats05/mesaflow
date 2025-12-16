@@ -25,7 +25,7 @@ Este documento descreve a arquitetura, decisões técnicas e design patterns do 
 
 ### Diagrama de Fluxo
 
-![Arquitetura MesaFlow](/docs/assets/arquitetura-mesaflow.png)
+![Arquitetura MesaFlow](/docs/assets/arquitetura-mesaflow.png.png)
 
 O diagrama acima ilustra o fluxo completo da aplicação, desde o usuário no frontend até a persistência no banco de dados.
 
