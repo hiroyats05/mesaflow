@@ -23,6 +23,12 @@ Este documento descreve a arquitetura, decisões técnicas e design patterns do 
 
 ## 🏗️ Arquitetura
 
+### Diagrama de Fluxo
+
+![Arquitetura MesaFlow](./docs/assets/arquitetura-mesaflow.png)
+
+O diagrama acima ilustra o fluxo completo da aplicação, desde o usuário no frontend até a persistência no banco de dados.
+
 ### Camadas
 
 ```
@@ -158,8 +164,6 @@ Arquivos de teste HTTP (executáveis com REST Client do VS Code):
 - **`src/test/apitestEstoque.http`**: CRUD de estoque com exemplos de requests
 - **`src/test/apitestCompleto.http`**: Fluxo completo (signup → login → create estoque → update)
 
-Executar: Abrir arquivo `.http` → Clicar no link de requisição desejada
-
 ---
 
 ## 🏛️ Estrutura de Pastas
@@ -253,14 +257,10 @@ As escolhas de tecnologia e arquitetura do frontend serão baseadas em:
 - 🔄 **Validação com clientes** sobre UX/UI e experiência
 - 🛠️ **Trade-off** complexidade vs. valor agregado
 
-**Em consideração:**
-- Stack: React Native, Flutter, ou web responsivo (React/Vue)
-- Arquitetura: App centralizado vs. múltiplos apps especializados
-- Features: Priorização dinâmica conforme evolução do backend e feedback dos clientes
 
 ### Integrações (Futuro)
-- [ ] Payment gateway (Stripe, PagSeguro)
-- [ ] Delivery (Ifood, Uber Eats)
+- [ ] Payment gateway
+- [ ] Delivery (Ifood)
 - [ ] SMS/Email notifications
 - [ ] Analytics e BI
 
@@ -306,7 +306,6 @@ HTTP Requests (Desktop, Mobile, CLI)
 
 ### Por que Prisma 5 (não 7)?
 - Documentação mais madura e estável
-- Menos boilerplate de configuração
 - Suporte excelente a SQLite e Postgres
 - Migrações automáticas facilitadas
 
