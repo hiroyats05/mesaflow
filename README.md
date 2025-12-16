@@ -254,23 +254,6 @@ As escolhas de tecnologia e arquitetura do frontend serão baseadas em:
 
 ## 🔄 Arquitetura de Camadas (Backend)
 
-```
-HTTP Requests (Desktop, Mobile, CLI)
-         ↓
-    Routes Layer
-  (auth, users, estoque)
-         ↓
-   Services Layer
-  (Business Logic, DIP)
-         ↓
- Repositories Layer
-  (Data Abstraction)
-         ↓
-   Prisma ORM
-         ↓
-    SQLite DB
-```
-
 **Fluxo típico de uma requisição:**
 1. Cliente envia `POST /estoques` com Bearer token
 2. **Authenticate Decorator** valida JWT
