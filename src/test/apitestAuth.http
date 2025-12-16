@@ -1,0 +1,34 @@
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "dono@mesaflow.com",
+  "password": "senha123"
+}
+
+###
+
+### Verificar Token (rota protegida)
+GET http://localhost:3000/auth/me
+Authorization: Bearer SEU_TOKEN_AQUI
+
+###
+
+### Listar estoque (rota protegida - com token)
+GET http://localhost:3000/estoques
+Authorization: Bearer SEU_TOKEN_AQUI
+
+###
+
+### Criar item de estoque (rota protegida - com token)
+POST http://localhost:3000/estoques
+Content-Type: application/json
+Authorization: Bearer SEU_TOKEN_AQUI
+
+{
+  "nome": "Arroz 5kg",
+  "quantidade": 50,
+  "categoria": "Grãos",
+  "fornecedor": "Distribuidora ABC"
+}

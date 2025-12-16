@@ -21,7 +21,7 @@ model User {
   password      String
   phone         String  @unique
   avatar        String?
-  role          String  @default("user") // "user", "admin", "owner"
+  role          String  @default("user") // "user", "admin"
   status        String  @default("active") // "active", "inactive", "suspended"
   lastLogin     DateTime?
   createdAt     DateTime @default(now())

@@ -1,0 +1,85 @@
+### 1. Criar usuário (sem auth)
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+  "email": "dono@mesaflow.com",
+  "name": "Dono Estabelecimento",
+  "password": "senha123",
+  "phone": "11987654321"
+}
+
+###
+
+### 2. Login (gera access token + refresh token)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "dono@mesaflow.com",
+  "password": "senha123"
+}
+
+###
+
+### 3. Renovar access token (quando expirar)
+POST http://localhost:3000/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "SEU_REFRESH_TOKEN_AQUI"
+}
+
+###
+
+### 4. Verificar meus dados (rota protegida)
+GET http://localhost:3000/auth/me
+Authorization: Bearer SEU_ACCESS_TOKEN_AQUI
+
+###
+
+### 5. Logout (revoga refresh token)
+POST http://localhost:3000/auth/logout
+Content-Type: application/json
+Authorization: Bearer SEU_ACCESS_TOKEN_AQUI
+
+{
+  "refreshToken": "SEU_REFRESH_TOKEN_AQUI"
+}
+
+###
+
+### 6. Listar meu estoque (rota protegida)
+GET http://localhost:3000/estoque
+Authorization: Bearer SEU_ACCESS_TOKEN_AQUI
+
+###
+
+### 7. Criar item de estoque (rota protegida)
+POST http://localhost:3000/estoque
+Content-Type: application/json
+Authorization: Bearer SEU_ACCESS_TOKEN_AQUI
+
+{
+  "nome": "Arroz 5kg",
+  "quantidade": 50,
+  "categoria": "Grãos",
+  "fornecedor": "Distribuidora ABC"
+}
+
+###
+
+### 8. Atualizar quantidade de estoque (rota protegida)
+PUT http://localhost:3000/estoque/1
+Content-Type: application/json
+Authorization: Bearer SEU_ACCESS_TOKEN_AQUI
+
+{
+  "quantidade": 45
+}
+
+###
+
+### 9. Deletar item de estoque (rota protegida)
+DELETE http://localhost:3000/estoque/1
+Authorization: Bearer SEU_ACCESS_TOKEN_AQUI

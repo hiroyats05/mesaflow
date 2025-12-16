@@ -1,45 +1,49 @@
-import { prisma } from '../../prisma/client';
+import { AuthService } from '../../auth/auth.service';
+import { PrismaUserRepository, UserRepository, CreateUserData, UpdateUserData } from './user.repository';
 
-type CreateUserInput = {
-    email: string;
-    name: string;
-    password: string;
-    phone?: string | null;
-    status?: string;
-};
-
-type UpdateUserInput = Partial<{
-    email: string;
-    name: string;
-    password: string;
-    phone?: string | null;
-    status?: string;
-}>;
+const authService = new AuthService();
 
 export class UserService {
-    async create(data: CreateUserInput) {
-        return prisma.user.create({
-            data: {
-                ...data,
-                role: 'admin', // sempre admin para o dono do estabelecimento
-            },
+    constructor(private readonly repo: UserRepository = new PrismaUserRepository()) {}
+
+    async create(data: CreateUserData) {
+        const hashedPassword = await authService.hashPassword(data.password);
+        
+        return this.repo.create({
+            ...data,
+            password: hashedPassword,
+            role: data.role ?? 'user',
         });
     }
 
     async list() {
-        return prisma.user.findMany();
+        return this.repo.list();
     }
 
     async getById(id: number) {
-        return prisma.user.findUnique({ where: { id } });
+        return this.repo.findById(id);
     }
 
-    async update(id: number, data: UpdateUserInput) {
-        const { email, name, password, phone, status } = data;
-        return prisma.user.update({ where: { id }, data: { email, name, password, phone, status } });
+    async findByEmail(email: string) {
+        return this.repo.findByEmail(email);
+    }
+
+    async findByPhone(phone: string) {
+        return this.repo.findByPhone(phone);
+    }
+
+    async update(id: number, data: UpdateUserData) {
+        const { email, name, password, phone, status, role } = data;
+        
+        const updateData: any = { email, name, phone, status, role };
+        if (password) {
+            updateData.password = await authService.hashPassword(password);
+        }
+        
+        return this.repo.update(id, updateData);
     }
 
     async delete(id: number) {
-        return prisma.user.delete({ where: { id } });
+        return this.repo.delete(id);
     }
 }

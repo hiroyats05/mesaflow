@@ -1,45 +1,25 @@
-import { prisma } from '../../prisma/client';
-
-type CreateEstoqueItemInput = {
-  userId: number;
-  nome: string;
-  quantidade?: number;
-  categoria?: string | null;
-  fornecedor?: string | null;
-};
-
-type UpdateEstoqueItemInput = Partial<{
-  nome: string;
-  quantidade: number;
-  categoria: string | null;
-  fornecedor: string | null;
-}>;
+import { CreateEstoqueData, EstoqueRepository, PrismaEstoqueRepository, UpdateEstoqueData } from './estoque.repository';
 
 export class EstoqueService {
-  async create(data: CreateEstoqueItemInput) {
-    return prisma.estoqueItem.create({ data });
+  constructor(private readonly repo: EstoqueRepository = new PrismaEstoqueRepository()) {}
+
+  async create(data: CreateEstoqueData) {
+    return this.repo.create(data);
   }
 
   async list(userId: number) {
-    return prisma.estoqueItem.findMany({ where: { userId } });
+    return this.repo.list(userId);
   }
 
   async getById(id: number, userId: number) {
-    return prisma.estoqueItem.findFirst({
-      where: { id, userId },
-    });
+    return this.repo.findById(id, userId);
   }
 
-  async update(id: number, userId: number, data: UpdateEstoqueItemInput) {
-    return prisma.estoqueItem.updateMany({
-      where: { id, userId },
-      data,
-    });
+  async update(id: number, userId: number, data: UpdateEstoqueData) {
+    return this.repo.update(id, userId, data);
   }
 
   async delete(id: number, userId: number) {
-    return prisma.estoqueItem.deleteMany({
-      where: { id, userId },
-    });
+    return this.repo.delete(id, userId);
   }
 }

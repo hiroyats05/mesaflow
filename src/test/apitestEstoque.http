@@ -1,0 +1,60 @@
+### Listar todos os itens de estoque
+GET http://localhost:3000/estoques
+
+###
+
+### Buscar item por ID
+GET http://localhost:3000/estoques/1
+
+###
+
+### Criar novo item de estoque
+POST http://localhost:3000/estoques
+Content-Type: application/json
+
+{
+  "nome": "Arroz 5kg",
+  "quantidade": 100,
+  "categoria": "alimentos",
+  "fornecedor": "Distribuidora ABC"
+}
+
+###
+
+### Criar item sem quantidade (default 0)
+POST http://localhost:3000/estoques
+Content-Type: application/json
+
+{
+  "nome": "Feijão 1kg",
+  "categoria": "alimentos",
+  "fornecedor": "Distribuidora XYZ"
+}
+
+###
+
+### Atualizar item de estoque
+PUT http://localhost:3000/estoques/1
+Content-Type: application/json
+
+{
+  "quantidade": 150,
+  "fornecedor": "Novo Fornecedor"
+}
+
+###
+
+### Atualizar apenas quantidade
+PUT http://localhost:3000/estoques/1
+Content-Type: application/json
+
+{
+  "quantidade": 200
+}
+
+###
+
+### Deletar item de estoque
+DELETE http://localhost:3000/estoques/1
+
+###
