@@ -36,7 +36,7 @@ export async function userRoutes(fastify: FastifyInstance) {
       
       const user = await service.getById(Number(id));
       if (!user) return reply.code(404).send({ error: 'User not found' });
-      return user;
+      return repo.DTOresponseUser(user);
     }
   );
 // Criar usuário
@@ -62,9 +62,8 @@ export async function userRoutes(fastify: FastifyInstance) {
       return reply.code(400).send({ error: 'Telefone já está em uso' });
     }
 
-
     const user = await service.create(body);
-    return reply.code(201).send(user);
+    return reply.code(201).send(await repo.DTOresponseUser(user));
   });
 // Atualizar usuário 
   fastify.put(

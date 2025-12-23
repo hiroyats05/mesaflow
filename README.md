@@ -23,12 +23,6 @@ Este documento descreve a arquitetura, decisões técnicas e design patterns do 
 
 ## 🏗️ Arquitetura
 
-### Diagrama de Fluxo
-
-![Arquitetura MesaFlow](./docs/assets/arquitetura-mesaflow.png)
-
-O diagrama acima ilustra o fluxo completo da aplicação, desde o usuário no frontend até a persistência no banco de dados.
-
 ### Camadas
 
 ```
@@ -248,15 +242,6 @@ O foco atual é consolidar a **camada de backend** com uma arquitetura sólida:
 - [ ] CI/CD pipeline (GitHub Actions)
 - [ ] Monitoring e alertas
 - [ ] Backup automatizado
-
-### Frontend (Stack & Arquitetura - Decisões em Aberto)
-As escolhas de tecnologia e arquitetura do frontend serão baseadas em:
-- 📊 **Feedback real** de usuários em produção
-- 🎯 **Requisitos operacionais** observados no dia-a-dia
-- 📈 **Métricas de uso** e pontos de dor identificados
-- 🔄 **Validação com clientes** sobre UX/UI e experiência
-- 🛠️ **Trade-off** complexidade vs. valor agregado
-
 
 ### Integrações (Futuro)
 - [ ] Payment gateway

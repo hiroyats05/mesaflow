@@ -50,6 +50,16 @@ export class PrismaUserRepository implements UserRepository {
     return prisma.user.findUnique({ where: { phone } });
   }
 
+    //uso deve ser feito para evitar expor informações sensiveis
+  async DTOresponseUser(user: User) {
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+    }
+  }
+
   async update(id: number, data: UpdateUserData) {
     return prisma.user.update({ where: { id }, data });
   }
