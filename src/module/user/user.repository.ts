@@ -22,6 +22,7 @@ export type UpdateUserData = Partial<{
 export interface UserRepository {
   create(data: CreateUserData): Promise<User>;
   list(): Promise<User[]>;
+  listAll(): Promise<User[]>;
   findById(id: number): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findByPhone(phone: string): Promise<User | null>;
@@ -35,6 +36,10 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async list() {
+    return prisma.user.findMany();
+  }
+
+  async listAll() {
     return prisma.user.findMany();
   }
 

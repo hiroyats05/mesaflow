@@ -19,6 +19,7 @@ export type UpdateEstoqueData = Partial<{
 export interface EstoqueRepository {
   create(data: CreateEstoqueData): Promise<EstoqueItem>;
   list(userId: number): Promise<EstoqueItem[]>;
+  listAll(): Promise<EstoqueItem[]>;
   findById(id: number, userId: number): Promise<EstoqueItem | null>;
   update(id: number, userId: number, data: UpdateEstoqueData): Promise<{ count: number }>;
   delete(id: number, userId: number): Promise<{ count: number }>;
@@ -31,6 +32,10 @@ export class PrismaEstoqueRepository implements EstoqueRepository {
 
   async list(userId: number) {
     return prisma.estoqueItem.findMany({ where: { userId } });
+  }
+
+  async listAll() {
+    return prisma.estoqueItem.findMany();
   }
 
   async findById(id: number, userId: number) {

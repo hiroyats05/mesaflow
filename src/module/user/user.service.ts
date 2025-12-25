@@ -20,6 +20,10 @@ export class UserService {
         return this.repo.list();
     }
 
+    async listAll() {
+        return this.repo.listAll();
+    }
+
     async getById(id: number) {
         return this.repo.findById(id);
     }

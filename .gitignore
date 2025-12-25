@@ -76,3 +76,7 @@ pids/
 out/
 dist/
 build/
+
+# Non-essentials
+
+node_modules/

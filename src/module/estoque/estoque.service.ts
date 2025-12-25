@@ -11,6 +11,10 @@ export class EstoqueService {
     return this.repo.list(userId);
   }
 
+  async listAll() {
+    return this.repo.listAll();
+  }
+
   async getById(id: number, userId: number) {
     return this.repo.findById(id, userId);
   }

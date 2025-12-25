@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { PrismaCardapioRepository } from './cardapio.repository.js';
+import { PrismaCardapioRepository } from './cardapio.repository';
 import { CardapioService } from './cardapio.service';
 
 const repo = new PrismaCardapioRepository();
@@ -33,14 +33,6 @@ export async function cardapioRoutes(fastify: FastifyInstance) {
         }
     );
 
-    // Listar todos os itens do cardápio
-    fastify.get(
-        '/cardapios',
-        async (request: FastifyRequest, reply: FastifyReply) => {
-            const items = await service.list();
-            return reply.send(items);
-        }
-    );
 
     // Buscar item por ID
     fastify.get(
@@ -99,6 +91,33 @@ export async function cardapioRoutes(fastify: FastifyInstance) {
             } catch (error) {
                 return reply.code(500).send({ error: 'Erro ao deletar item' });
             }
+        }
+    );
+
+    // Buscar item por nome
+    fastify.get(
+        '/cardapios/nome/:nome/:empresaId',
+        { onRequest: [fastify.authenticate] },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            const { nome, empresaId } = request.params as { nome: string; empresaId: string };
+            
+            const item = await service.getByName(nome, Number(empresaId));
+            if (!item) {
+                return reply.code(404).send({ error: 'Item não encontrado' });
+            }
+            return reply.send(item);
+        }
+    );
+
+    // Listar itens por empresa
+    fastify.get(
+        '/cardapios/empresa/:empresaId',
+        { onRequest: [fastify.authenticate] },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            const { empresaId } = request.params as { empresaId: string };
+            
+            const items = await service.listByEmpresa(Number(empresaId));
+            return reply.send(items);
         }
     );
 }

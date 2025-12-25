@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,63 +15,63 @@ datasource db {
 // =====================
 
 model User {
-  id            Int     @id @default(autoincrement())
-  email         String  @unique
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
   name          String
   password      String
-  phone         String  @unique
-  avatar        String?
-  role          String  @default("user") // "user", "admin"
-  status        String  @default("active") // "active", "inactive", "suspended"
+  phone         String?   @unique
+  role          String    @default("user") // "admin", "user"
+  status        String    @default("active") // "active", "inactive"
   lastLogin     DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  subscription  Subscription?
-  dependents    Dependent[]
-  cardapio      Cardapio[]
+  // Relations
+  empresas      Empresa[]
   estoque       EstoqueItem[]
+}
+
+// =====================
+// MULTI-TENANT: EMPRESA
+// =====================
+
+model Empresa {
+  id            Int       @id @default(autoincrement())
+  userId        Int       // Owner/Admin da empresa
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nome          String
+  status        String    @default("ativo") // "ativo", "inativo"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations - Multi-tenant aggregator
+  team          Team[]
+  cardapio      Cardapio[]
+  
   atendimentos  Atendimento[]
   caixas        Caixa[]
-}
-
-model Subscription {
-  id            Int     @id @default(autoincrement())
-  userId        Int     @unique
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan          String  // "free", "basic", "professional", "enterprise"
-  status        String  @default("active") // "active", "inactive", "cancelled"
-  mpId          String? // Mercado Pago ID
-  preco         Decimal @default(0)
-  startDate     DateTime @default(now())
-  endDate       DateTime?
-  renewalDate   DateTime?
-  autoRenew     Boolean @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 
   @@index([userId])
 }
 
 // =====================
-// TEAM & PERMISSIONS
+// MÓDULO: TEAM/STAFF
 // =====================
 
-model Dependent {
-  id            Int     @id @default(autoincrement())
-  name          String
-  email         String?
-  phone         String?
-  role          String  // "manager", "employee", "viewer"
-  permissions   String? // JSON array de permissões
-  userId        Int
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  atendimentos  Atendimento[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+model Team {
+  id            Int       @id @default(autoincrement())
+  empresa       Int
+  empresaRelation Empresa @relation(fields: [empresa], references: [id], onDelete: Cascade)
+  nome          String
+  login        String
+  password      String
+  funcao        String    // "caixa", "garcom", "entregador"
+  status        String    @default("ativo") // "ativo", "inativo"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  @@index([userId])
-  @@unique([email, userId])
+  @@index([empresa])
+  @@unique([login, empresa]) // login único por empresa
 }
 
 // =====================
@@ -79,20 +79,18 @@ model Dependent {
 // =====================
 
 model Cardapio {
-  id            Int     @id @default(autoincrement())
-  userId        Int
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            Int       @id @default(autoincrement())
+  empresa       Int
+  empresaRelation Empresa @relation(fields: [empresa], references: [id], onDelete: Cascade)
   nome          String
+  valor         Decimal
   descricao     String?
-  preco         Decimal
-  categoria     String? // "comida", "bebida", "sobremesa"
-  imagem        String?
-  ativo         Boolean @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  disponivel    Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  @@index([userId])
-  @@index([categoria])
+  @@index([empresa])
+  @@unique([nome, empresa]) // nome único por empresa
 }
 
 // =====================
@@ -100,57 +98,56 @@ model Cardapio {
 // =====================
 
 model EstoqueItem {
-  id            Int     @id @default(autoincrement())
-  userId        Int
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  nome          String
-  quantidade    Int     @default(0)
-  categoria     String?
-  fornecedor    String?
-  dataCadastro  DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  @@index([userId])
-}
-
-// =====================
-// MÓDULO: ATENDIMENTO
-// =====================
-
-model Atendimento {
   id            Int       @id @default(autoincrement())
   userId        Int
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dependentId   Int
-  dependent     Dependent @relation(fields: [dependentId], references: [id], onDelete: Cascade)
-  pedido        String
-  descricao     String?
-  status        String    @default("aberto")      // "aberto" | "em_progresso" | "entregue" | "cancelado"
-  entregue      Boolean   @default(false)
-  entregueAt    DateTime?
+  nome          String
+  quantidade    Int       @default(0)
+  categoria     String?
+  fornecedor    String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([userId])
-  @@index([dependentId])
+}
+
+// =====================
+// MÓDULO: ATENDIMENTO (Orders/Reservations)
+// =====================
+
+model Atendimento {
+  id            Int       @id @default(autoincrement())
+  empresa       Int
+  empresaRelation Empresa @relation(fields: [empresa], references: [id], onDelete: Cascade)
+  teamId        Int?      // Garcom/Entregador responsável
+  descricao     String?
+  status        String    @default("aberto") // "aberto", "em_progresso", "entregue", "cancelado"
+  mesa          String?   // Número da mesa ou endereço entrega
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([empresa])
   @@index([status])
 }
 
 // =====================
-// MÓDULO: FINANCEIRO
+// MÓDULO: CAIXA (Cash Register)
 // =====================
 
 model Caixa {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  valor          Decimal
-  descricao      String?
-  metodo         String?  // "dinheiro" | "cartao" | "pix" |
-  referencia     String?  // mesa
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id            Int       @id @default(autoincrement())
+  empresa       Int
+  empresaRelation Empresa @relation(fields: [empresa], references: [id], onDelete: Cascade)
+  teamId        Int?      // Caixa responsável
+  valor         Decimal
+  descricao     String?
+  metodo        String?   // "dinheiro", "cartao", "pix"
+  tipo          String    // "entrada", "saida"
+  referencia    String?   // mesa, comanda, transacao
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  @@index([userId])
+  @@index([empresa])
+  @@index([tipo])
 }
 
