@@ -1,0 +1,32 @@
+:root{
+  --bg:#f7f8fb;
+  --accent:#0b63d1;
+  --muted:#6b7280;
+  --card:#ffffff;
+}
+*{box-sizing:border-box}
+body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:var(--bg); color:#111}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+.site-header{background:transparent;padding:1rem 0}
+.site-header .logo{display:inline-block;margin:0;font-weight:700}
+.site-header nav{float:right}
+.btn{display:inline-block;padding:.5rem .9rem;border-radius:6px;background:transparent;border:1px solid var(--accent);color:var(--accent);text-decoration:none}
+.hero{padding:6rem 0;background:linear-gradient(180deg, rgba(11,99,209,0.06), transparent)}
+.hero h2{font-size:2rem;margin:0 0 .5rem}
+.hero p{margin:0 0 1rem;color:var(--muted)}
+.primary{background:var(--accent);color:#fff;padding:.75rem 1.1rem;border-radius:8px;text-decoration:none}
+.features{display:flex;gap:1rem;padding:3rem 0}
+.feature{background:var(--card);padding:1rem;border-radius:8px;flex:1;box-shadow:0 4px 12px rgba(16,24,40,0.04)}
+.site-footer{padding:2rem 0;text-align:center;color:var(--muted)}
+
+/* Login */
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh}
+.login-container{width:100%;max-width:420px;padding:2rem}
+.card{background:var(--card);padding:2rem;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.08)}
+.card h2{margin:0 0 1rem}
+form label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:.5rem}
+form input{width:100%;padding:.7rem .8rem;margin:.25rem 0 1rem;border:1px solid #e6e9ef;border-radius:8px}
+button.primary{width:100%;border:none}
+.muted{color:var(--muted);font-size:.9rem;text-align:center;margin-top:1rem}
+
+@media (max-width:700px){.features{flex-direction:column}}

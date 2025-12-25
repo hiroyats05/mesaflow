@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Entrar — MesaFlow</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+  <main class="login-container">
+    <div class="card">
+      <h2>Entrar no MesaFlow</h2>
+      <form id="loginForm">
+        <label>
+          E-mail
+          <input type="email" name="email" required placeholder="seu@exemplo.com">
+        </label>
+        <label>
+          Senha
+          <input type="password" name="password" required placeholder="••••••••">
+        </label>
+        <button type="submit" class="primary">Entrar</button>
+      </form>
+      <p class="muted">Ainda não tem conta? Peça para o administrador criar uma.</p>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      alert('Simulação de login — implemente integração com a API.');
+    });
+  </script>
+</body>
+</html>
